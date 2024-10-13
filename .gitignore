@@ -1,0 +1,21 @@
+# Ignore Gradle-related files
+.gradle/
+**/build/
+
+# Ignore IDE-specific files (IntelliJ IDEA)
+.idea/
+
+# Ignore specific Gradle build output files
+buildSrc/.gradle/
+buildSrc/build/
+
+# Ignore Fineract subprojects build directories
+fineract-accounting/build/
+fineract-avro-schemas/build/
+fineract-branch/build/
+fineract-core/build/
+fineract-document/build/
+fineract-investor/build/
+fineract-loan/build/
+fineract-provider/build/
+fineract-savings/build/
