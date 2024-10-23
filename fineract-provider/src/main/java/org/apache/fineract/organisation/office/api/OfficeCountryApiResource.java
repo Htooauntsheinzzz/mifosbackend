@@ -26,23 +26,26 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.UriInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.service.SqlValidator;
 import org.apache.fineract.organisation.office.data.OfficeCountryData;
+import org.apache.fineract.organisation.office.service.OfficeCountryReadPlatformService;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,10 +61,34 @@ public class OfficeCountryApiResource {
     private static final String RESOURCE_NAME_FOR_PERMISSIONS = "OFFICE_COUNTRY";
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
+    private final OfficeCountryReadPlatformService officeCountryReadPlatformService;
     private final PlatformSecurityContext context;
     private final DefaultToApiJsonSerializer<OfficeCountryData> toApiJsonSerializer;
     private final SqlValidator sqlValidator;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
+
+
+
+    @GET
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Operation(summary = "Retrieve All Office Country Location Template",description = "Example Request:\n" + "\n" + "offices/template")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "OK",content = @Content(schema =@Schema(implementation = OfficeCountryApiSwagger.GetOfficesCountryTemplateResponse.class)))})
+    public String retrieveAllCountriesTemplate(@Context final UriInfo uriInfo,
+                                               @QueryParam("orderBy") @Parameter(description = "orderBy") final String orderBy,
+                                               @QueryParam("sortOrder") @Parameter(description = "sortOrder") final String sortOrder) {
+
+        context.authenticatedUser().validateHasReadPermission(RESOURCE_NAME_FOR_PERMISSIONS);
+        sqlValidator.validate(orderBy);
+        sqlValidator.validate(sortOrder);
+        final SearchParameters searchParameters = SearchParameters.builder().orphansOnly(false).isSelfUser(false).orderBy(orderBy).build();
+        final Collection<OfficeCountryData> officeCountries = officeCountryReadPlatformService.retrieveAllCountries(searchParameters);
+        final ApiRequestJsonSerializationSettings settings = apiRequestParameterHelper.process(uriInfo.getQueryParameters());
+        return toApiJsonSerializer.serialize(settings,officeCountries,RESPONSE_DATA_PARAMETERS);
+
+    }
+
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})

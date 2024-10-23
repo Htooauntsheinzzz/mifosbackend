@@ -2,6 +2,9 @@ package org.apache.fineract.organisation.office.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.time.LocalDate;
+import java.util.Collection;
+
 final class OfficeCountryApiSwagger {
 
     private OfficeCountryApiSwagger() {}
@@ -36,6 +39,38 @@ final class OfficeCountryApiSwagger {
         public Long id;
         @Schema(example = "3")
         public Long resourceId;
+    }
+
+    @Schema(description = "GetOfficesCountryTemplateResponse")
+    public static final class GetOfficesCountryTemplateResponse{
+        private  GetOfficesCountryTemplateResponse() {
+
+        }
+
+        public Collection<GetOfficesCountryResponse> countryResponses;
+
+
+    }
+
+
+    public static final class GetOfficesCountryResponse{
+
+        @Schema(example = "1")
+        public long id;
+        @Schema(example = "Myanmar")
+        public String name;
+        @Schema(example = "For Myanmar Office Country")
+        public String description;
+        @Schema(example = "1")
+        public long position;
+        @Schema(example = "true")
+        public boolean isActive;
+        @Schema(example = "en")
+        public String locale;
+
+        public Collection<GetOfficesCountryResponse> countryResponses;
+
+
     }
 
 }

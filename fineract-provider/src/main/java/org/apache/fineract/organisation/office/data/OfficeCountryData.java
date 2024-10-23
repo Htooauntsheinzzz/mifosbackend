@@ -20,6 +20,9 @@ package org.apache.fineract.organisation.office.data;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Getter
 public class OfficeCountryData {
 
@@ -28,18 +31,21 @@ public class OfficeCountryData {
     private final String description;
     private final int postion;
     private final boolean isActive;
-    private final  String locale;
+    private final Collection<OfficeCountryData> all_OfficeCountries;
 
 
-    public OfficeCountryData(Long id, String name, String description, int postion, boolean isActive, String locale) {
+    public OfficeCountryData(Long id, String name, String description, int postion, boolean isActive,final Collection<OfficeCountryData> all_OfficeCountries) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.postion = postion;
         this.isActive = isActive;
-        this.locale = locale;
+        this.all_OfficeCountries  = all_OfficeCountries;
+
     }
 
-
+    public static OfficeCountryData instance(final long id,final String name,final String description,final int position,final boolean isActive) {
+        return new OfficeCountryData(id,name,description,position,isActive,null);
+    }
 
 }
