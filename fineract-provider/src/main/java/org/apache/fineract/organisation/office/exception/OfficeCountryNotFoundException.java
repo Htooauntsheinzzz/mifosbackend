@@ -16,17 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.organisation.office.service;
+package org.apache.fineract.organisation.office.exception;
 
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.organisation.office.data.OfficeCountryData;
+import org.apache.fineract.infrastructure.core.exception.AbstractPlatformResourceNotFoundException;
 
-import java.util.Collection;
+public class OfficeCountryNotFoundException extends AbstractPlatformResourceNotFoundException {
 
-public interface OfficeCountryReadPlatformService {
-
-    Collection<OfficeCountryData> retrieveAllCountries(SearchParameters searchParameters);
-
-    OfficeCountryData retrieveCountry(Long countryId);
-
+    public OfficeCountryNotFoundException(final Long id) {
+        super("error.msg.country.invalid","Country with "+id+" not found");
+    }
 }

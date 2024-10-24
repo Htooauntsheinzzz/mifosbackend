@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.organisation.office.domain;
 
+import org.apache.fineract.organisation.office.exception.OfficeCountryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,9 @@ public class OfficeCountryRepositoryWrapper {
 
     public OfficeCountry saveAndflash(final OfficeCountry officeCountry) {
         return officeCountryRepository.saveAndFlush(officeCountry);
+    }
+
+    public OfficeCountry findOneWithNotFoundDetection(final Long id){
+        return  this.officeCountryRepository.findById(id).orElseThrow(() -> new OfficeCountryNotFoundException(id));
     }
 }

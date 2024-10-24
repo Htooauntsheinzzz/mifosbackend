@@ -29,23 +29,21 @@ public class OfficeCountryData {
     private final Long id;
     private final String name;
     private final String description;
-    private final int postion;
+    private final int position;
     private final boolean isActive;
-    private final Collection<OfficeCountryData> all_OfficeCountries;
 
 
-    public OfficeCountryData(Long id, String name, String description, int postion, boolean isActive,final Collection<OfficeCountryData> all_OfficeCountries) {
+    public OfficeCountryData(Long id, String name, String description, int position, boolean isActive) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.postion = postion;
+        this.position = position;
         this.isActive = isActive;
-        this.all_OfficeCountries  = all_OfficeCountries;
 
     }
 
     public static OfficeCountryData instance(final long id,final String name,final String description,final int position,final boolean isActive) {
-        return new OfficeCountryData(id,name,description,position,isActive,null);
+        return new OfficeCountryData(id,name,description,position,isActive);
     }
 
 }

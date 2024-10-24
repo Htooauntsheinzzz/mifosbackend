@@ -16,17 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.organisation.office.service;
+package org.apache.fineract.organisation.office.mapper;
 
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.config.MapstructMapperConfig;
 import org.apache.fineract.organisation.office.data.OfficeCountryData;
+import org.apache.fineract.organisation.office.domain.OfficeCountry;
+import org.mapstruct.Mapper;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface OfficeCountryReadPlatformService {
+@Mapper(config = MapstructMapperConfig.class)
+public interface CountryLocationMapper {
 
-    Collection<OfficeCountryData> retrieveAllCountries(SearchParameters searchParameters);
+    OfficeCountryData map(OfficeCountry officeCountry);
 
-    OfficeCountryData retrieveCountry(Long countryId);
-
+    List<OfficeCountryData> map(List<OfficeCountry> officeCountry);
 }

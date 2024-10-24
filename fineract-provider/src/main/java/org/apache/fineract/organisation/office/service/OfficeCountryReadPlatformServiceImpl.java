@@ -24,7 +24,10 @@ import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecific
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.office.data.OfficeCountryData;
+import org.apache.fineract.organisation.office.domain.OfficeCountry;
 import org.apache.fineract.organisation.office.domain.OfficeCountryRepository;
+import org.apache.fineract.organisation.office.domain.OfficeCountryRepositoryWrapper;
+import org.apache.fineract.organisation.office.mapper.CountryLocationMapper;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,6 +49,8 @@ public class OfficeCountryReadPlatformServiceImpl implements OfficeCountryReadPl
     private final ColumnValidator columnValidator;
 
     private final OfficeCountryRepository officeCountryRepository;
+    private final OfficeCountryRepositoryWrapper officeCountryWrapper;
+    private final CountryLocationMapper countryLocationMapper;
 
 
     @Override
@@ -72,7 +77,6 @@ public class OfficeCountryReadPlatformServiceImpl implements OfficeCountryReadPl
         return this.jdbcTemplate.query(sqlbuilder.toString(),rm);
     }
 
-
     private static final class OfficeCountryMapper implements RowMapper<OfficeCountryData> {
 
         public String schema(){
@@ -91,5 +95,14 @@ public class OfficeCountryReadPlatformServiceImpl implements OfficeCountryReadPl
             final boolean isactive = rs.getBoolean("isActive");
             return OfficeCountryData.instance(id,countryName,description,position,isactive);
         }
+    }
+
+    @Override
+    public OfficeCountryData retrieveCountry(Long countryId) {
+
+        this.context.authenticatedUser();
+        final OfficeCountry country = this.officeCountryWrapper.findOneWithNotFoundDetection(countryId);
+
+        return this.countryLocationMapper.map(country);
     }
 }

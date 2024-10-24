@@ -42,6 +42,8 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.service.SqlValidator;
 import org.apache.fineract.organisation.office.data.OfficeCountryData;
+import org.apache.fineract.organisation.office.domain.OfficeCountryRepositoryWrapper;
+import org.apache.fineract.organisation.office.mapper.CountryLocationMapper;
 import org.apache.fineract.organisation.office.service.OfficeCountryReadPlatformService;
 import org.springframework.stereotype.Component;
 
@@ -66,13 +68,14 @@ public class OfficeCountryApiResource {
     private final DefaultToApiJsonSerializer<OfficeCountryData> toApiJsonSerializer;
     private final SqlValidator sqlValidator;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
+    private final OfficeCountryRepositoryWrapper officeCountryRepositoryWrapper;
 
 
 
     @GET
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Operation(summary = "Retrieve All Office Country Location Template",description = "Example Request:\n" + "\n" + "offices/template")
+    @Operation(summary = "Retrieve All Office Country Location Template")
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "OK",content = @Content(schema =@Schema(implementation = OfficeCountryApiSwagger.GetOfficesCountryTemplateResponse.class)))})
     public String retrieveAllCountriesTemplate(@Context final UriInfo uriInfo,
@@ -87,6 +90,22 @@ public class OfficeCountryApiResource {
         final ApiRequestJsonSerializationSettings settings = apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return toApiJsonSerializer.serialize(settings,officeCountries,RESPONSE_DATA_PARAMETERS);
 
+    }
+
+    @GET
+    @Path("{countryId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Operation(summary = "To Retrieve Country Details of Office")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "OK",content = @Content(schema =@Schema(implementation =OfficeCountryApiSwagger.GetOfficesCountryResponse.class)))})
+    public String retrieveCountryDetail(@PathParam("countryId")@Parameter(description = "countryId") final Long countryId,
+                                        @Context final UriInfo uriInfo){
+        context.authenticatedUser().validateHasReadPermission(RESOURCE_NAME_FOR_PERMISSIONS);
+        final ApiRequestJsonSerializationSettings settings = apiRequestParameterHelper.process(uriInfo.getQueryParameters());
+        this.officeCountryRepositoryWrapper.findOneWithNotFoundDetection(countryId);
+        final OfficeCountryData country =this.officeCountryReadPlatformService.retrieveCountry(countryId);
+        return  this.toApiJsonSerializer.serialize(settings,country,RESPONSE_DATA_PARAMETERS);
     }
 
 
