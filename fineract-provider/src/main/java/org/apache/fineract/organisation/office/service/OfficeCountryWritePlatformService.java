@@ -24,4 +24,6 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 public interface OfficeCountryWritePlatformService {
 
     CommandProcessingResult createOfficeCountry(JsonCommand jsonCommand);
+
+    CommandProcessingResult updateOfficeCountry(Long id,JsonCommand jsonCommand);
 }

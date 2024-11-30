@@ -26,11 +26,15 @@ import lombok.experimental.Accessors;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.kafka.common.protocol.types.Field;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "m_office_country", uniqueConstraints = { @UniqueConstraint(columnNames = { "country_name" }, name = "uni_country_name"),
@@ -78,6 +82,40 @@ public class OfficeCountry extends AbstractPersistableCustom implements Serializ
                 this.created_date = created_date;
 
         }
+         public Map<String,Object> update(final JsonCommand command){
+                final Map<String,Object> actualChanges = new LinkedHashMap<>();
+                final String paramOfficeCountryName = "name";
+                if (command.isChangeInStringParameterNamed(paramOfficeCountryName,this.name)){
+                        final String newValue = command.stringValueOfParameterNamed(paramOfficeCountryName);
+                        actualChanges.put(paramOfficeCountryName,newValue);
+                        this.name = newValue;
+
+                }
+
+                final String paramDescription ="description";
+                if(command.isChangeInStringParameterNamed(paramDescription,this.description)){
+                    final String newValue = command.stringValueOfParameterNamed(paramDescription);
+                    actualChanges.put(paramDescription,newValue);
+                    this.description = newValue;
+                }
+
+                final String paramPosition ="position";
+                if(command.isChangeInIntegerParameterNamed(paramPosition,this.position)){
+                    final int newValue = command.integerValueOfParameterNamed(paramPosition);
+                    actualChanges.put(paramPosition,newValue);
+                    this.position = newValue;
+                }
+
+                final String paramIsActive = "isActive";
+                if(command.isChangeInBooleanParameterNamed(paramIsActive,this.isActive)){
+                    final Boolean newValue = command.booleanObjectValueOfParameterNamed(paramIsActive);
+                    actualChanges.put(paramIsActive,newValue);
+                    this.isActive = newValue;
+                }
+
+                return actualChanges;
+
+         }
 
 
 }

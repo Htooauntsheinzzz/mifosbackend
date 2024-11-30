@@ -60,6 +60,7 @@ public class PaymentType extends AbstractPersistableCustom {
 
     public Map<String, Object> update(final JsonCommand command) {
 
+
         final Map<String, Object> actualChanges = new LinkedHashMap<>(3);
 
         if (command.isChangeInStringParameterNamed(PaymentTypeApiResourceConstants.NAME, this.name)) {

@@ -124,4 +124,21 @@ public class OfficeCountryApiResource {
         return toApiJsonSerializer.serialize(result);
 
     }
+
+    @PUT
+    @Path("{countryId}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Operation(summary = "Update Office country",description ="Update Office Country")
+    @RequestBody(required = true, content = @Content(schema = @Schema(implementation =OfficeCountryApiSwagger.PutOfficeCountryRequest.class )))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "OK",content = @Content(schema = @Schema(implementation = OfficeCountryApiSwagger.PutOfficeCountryResponse.class)))
+    })
+    public String updateCountry(@PathParam("countryId") @Parameter(description = "countryId") final Long countryId,
+                                @Parameter(hidden = true) final String apiRequestBodyAsJson){
+
+        final CommandWrapper commandRequest = new CommandWrapperBuilder().updateOfficeCountry(countryId).withJson(apiRequestBodyAsJson).build();
+        final CommandProcessingResult result = commandsSourceWritePlatformService.logCommandSource(commandRequest);
+        return this.toApiJsonSerializer.serialize(result);
+    }
 }

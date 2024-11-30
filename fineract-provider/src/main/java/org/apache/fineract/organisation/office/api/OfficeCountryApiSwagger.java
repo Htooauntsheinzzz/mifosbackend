@@ -51,8 +51,6 @@ final class OfficeCountryApiSwagger {
 
 
     }
-
-
     public static final class GetOfficesCountryResponse{
 
         @Schema(example = "1")
@@ -69,8 +67,31 @@ final class OfficeCountryApiSwagger {
         public String locale;
 
         public Collection<GetOfficesCountryResponse> countryResponses;
-
-
     }
+
+    @Schema(description = "PutOfficeCountryRequest")
+    public static final class PutOfficeCountryRequest{
+
+        private   PutOfficeCountryRequest(){}
+        @Schema(example = "Myanmar")
+        public String name;
+        @Schema(example = "For Myanmar Country")
+        public String description;
+        @Schema(example = "1")
+        public Long position;
+        @Schema(example = "en")
+        public int locale;
+        @Schema(example = "true")
+        public boolean isActive;
+    }
+
+
+    public static final class PutOfficeCountryResponse{
+        private  PutOfficeCountryResponse() {}
+
+        @Schema(example = "1")
+        public Long resourceId;
+    }
+
 
 }

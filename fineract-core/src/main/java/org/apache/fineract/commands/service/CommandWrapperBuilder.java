@@ -296,6 +296,14 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder updateOfficeCountry(final Long countryId){
+        this.actionName  = "UPDATE";
+        this.entityName = "OFFICE_COUNTRY";
+        this.entityId = countryId;
+        this.href = "/officeCountry/" + countryId ;
+        return this;
+    }
+
     public CommandWrapperBuilder updateOffice(final Long officeId) {
         this.actionName = "UPDATE";
         this.entityName = "OFFICE";

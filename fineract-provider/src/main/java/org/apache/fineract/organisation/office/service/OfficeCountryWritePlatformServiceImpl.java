@@ -30,12 +30,15 @@ import org.apache.fineract.infrastructure.core.exception.ErrorHandler;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.domain.OfficeCountry;
+import org.apache.fineract.organisation.office.domain.OfficeCountryRepository;
 import org.apache.fineract.organisation.office.domain.OfficeCountryRepositoryWrapper;
 import org.apache.fineract.organisation.office.serialization.OfficeCountryCommandApiJsonDeserializer;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,6 +48,7 @@ public class OfficeCountryWritePlatformServiceImpl implements OfficeCountryWrite
     private final PlatformSecurityContext context;
     private final OfficeCountryCommandApiJsonDeserializer fromApiJsonDeserializer;
     private final OfficeCountryRepositoryWrapper officeCountryRepositoryWrapper;
+    private final OfficeCountryRepository repository;
 
 
     @Transactional
@@ -60,9 +64,6 @@ public class OfficeCountryWritePlatformServiceImpl implements OfficeCountryWrite
             this.officeCountryRepositoryWrapper.saveAndflash(officeCountry);
 
             this.officeCountryRepositoryWrapper.save(officeCountry);
-
-                System.out.println("Jsoncommand ID"+jsonCommand.commandId());
-                System.out.println("Office ID"+officeCountry.getId());
             return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId())
                     .withEntityId(officeCountry.getId())
                     .withOfficeCountryId(officeCountry.getId())
@@ -76,6 +77,22 @@ public class OfficeCountryWritePlatformServiceImpl implements OfficeCountryWrite
             return CommandProcessingResult.empty();
         }
 
+    }
+
+    @Override
+    public CommandProcessingResult updateOfficeCountry(Long countryId, JsonCommand jsonCommand) {
+
+        this.fromApiJsonDeserializer.validateForUpdate(jsonCommand.json());
+        final OfficeCountry officeCountry = this.officeCountryRepositoryWrapper.findOneWithNotFoundDetection(countryId);
+        final Map<String,Object> changes = officeCountry.update(jsonCommand);
+
+        if(changes.isEmpty()){
+            this.repository.save(officeCountry);
+        }
+        return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId())
+                .withEntityId(jsonCommand.entityId())
+                .withMessage("Update Successful officeCountry Id - "+jsonCommand.entityId())
+                .build();
     }
 
     private void handleOfficeCountryDataIntegrityIssues(final JsonCommand jsonCommand,final Throwable realCause,final Exception dve){
@@ -92,4 +109,6 @@ public class OfficeCountryWritePlatformServiceImpl implements OfficeCountryWrite
         log.error("Error occured." ,dve);
         throw ErrorHandler.getMappable(dve, "error.msg.office_country.unknown.data.integrity.issue", "Unknown data integrity issue with resource.");
     }
+
+
 }

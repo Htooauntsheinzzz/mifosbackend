@@ -44,13 +44,14 @@ public class CommandProcessingResultBuilder {
     private Long productId;
     private boolean rollbackTransaction = false;
     private ExternalId entityExternalId = ExternalId.empty();
+    private  String message;
 
     private ExternalId subEntityExternalId = ExternalId.empty();
 
     public CommandProcessingResult build() {
         return CommandProcessingResult.fromDetails(this.commandId, this.officeId, this.officeCountryId,this.groupId, this.clientId, this.loanId, this.savingsId,
                 this.resourceIdentifier, this.entityId, this.gsimId, this.glimId, this.creditBureauReportData, this.transactionId,
-                this.changes, this.productId, this.rollbackTransaction, this.subEntityId, this.entityExternalId, this.subEntityExternalId);
+                this.changes, this.productId, this.rollbackTransaction, this.subEntityId, this.entityExternalId, this.subEntityExternalId,this.message);
     }
 
     public CommandProcessingResultBuilder withCommandId(final Long withCommandId) {
@@ -145,6 +146,11 @@ public class CommandProcessingResultBuilder {
 
     public CommandProcessingResultBuilder withSubEntityExternalId(final ExternalId subEntityExternalId) {
         this.subEntityExternalId = subEntityExternalId;
+        return this;
+    }
+
+    public CommandProcessingResultBuilder withMessage(final String withMessage) {
+        this.message = withMessage;
         return this;
     }
 
