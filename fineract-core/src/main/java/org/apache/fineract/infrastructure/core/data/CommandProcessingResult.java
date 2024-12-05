@@ -34,6 +34,7 @@ public class CommandProcessingResult implements Serializable {
     private Long commandId;
     private Long officeId;
     private Long officeCountryId;
+    private Long officeRegionId;
     private final Long groupId;
     private final Long clientId;
     private final Long loanId;
@@ -52,13 +53,15 @@ public class CommandProcessingResult implements Serializable {
     private final ExternalId subResourceExternalId;
     private  final String message;
 
-    private CommandProcessingResult(final Long commandId, final Long officeId,final Long officeCountryId, final Long groupId, final Long clientId, final Long loanId,
+    private CommandProcessingResult(final Long commandId, final Long officeId,final Long officeCountryId, final Long officeRegionId,final Long groupId, final Long clientId, final Long loanId,
             final Long savingsId, final String resourceIdentifier, final Long resourceId, final String transactionId,
             final Map<String, Object> changes, final Long productId, final Long gsimId, final Long glimId,
             final Map<String, Object> creditBureauReportData, Boolean rollbackTransaction, final Long subResourceId,
             final ExternalId resourceExternalId, final ExternalId subResourceExternalId,final String message) {
         this.commandId = commandId;
         this.officeId = officeId;
+        this.officeCountryId = officeCountryId;
+        this.officeRegionId = officeRegionId;
         this.groupId = groupId;
         this.clientId = clientId;
         this.loanId = loanId;
@@ -80,7 +83,7 @@ public class CommandProcessingResult implements Serializable {
 
     protected CommandProcessingResult(final Long resourceId, final Long officeId, final Long commandId, final Map<String, Object> changes,
             Long clientId) {
-        this(commandId, officeId, null,null, clientId, null, null, resourceId == null ? null : resourceId.toString(), resourceId, null, changes,
+        this(commandId, officeId, null,null,null, clientId, null, null, resourceId == null ? null : resourceId.toString(), resourceId, null, changes,
                 null, null, null, null, null, null, ExternalId.empty(), ExternalId.empty(),null
         );
     }
@@ -94,7 +97,7 @@ public class CommandProcessingResult implements Serializable {
     }
 
     public static CommandProcessingResult fromCommandProcessingResult(CommandProcessingResult commandResult, final Long resourceId) {
-        return new CommandProcessingResult(commandResult.commandId, commandResult.officeId,commandResult.officeCountryId, commandResult.groupId, commandResult.clientId,
+        return new CommandProcessingResult(commandResult.commandId, commandResult.officeId,commandResult.officeCountryId,commandResult.officeRegionId, commandResult.groupId, commandResult.clientId,
                 commandResult.loanId, commandResult.savingsId, commandResult.resourceIdentifier, resourceId, commandResult.transactionId,
                 commandResult.changes, commandResult.productId, commandResult.gsimId, commandResult.glimId,
                 commandResult.creditBureauReportData, commandResult.rollbackTransaction, commandResult.subResourceId,
@@ -105,12 +108,12 @@ public class CommandProcessingResult implements Serializable {
         return fromCommandProcessingResult(commandResult, commandResult.getResourceId());
     }
 
-    public static CommandProcessingResult fromDetails(final Long commandId, final Long officeId,final Long officeCountryId, final Long groupId, final Long clientId,
+    public static CommandProcessingResult fromDetails(final Long commandId, final Long officeId,final Long officeCountryId,final Long officeRegionId, final Long groupId, final Long clientId,
             final Long loanId, final Long savingsId, final String resourceIdentifier, final Long entityId, final Long gsimId,
             final Long glimId, final Map<String, Object> creditBureauReportData, final String transactionId,
             final Map<String, Object> changes, final Long productId, final Boolean rollbackTransaction, final Long subResourceId,
             final ExternalId resourceExternalId, final ExternalId subResourceExternalId,final String message) {
-        return new CommandProcessingResult(commandId, officeId,officeCountryId, groupId, clientId, loanId, savingsId, resourceIdentifier, entityId,
+        return new CommandProcessingResult(commandId, officeId,officeCountryId,officeRegionId, groupId, clientId, loanId, savingsId, resourceIdentifier, entityId,
                 transactionId, changes, productId, gsimId, glimId, creditBureauReportData, rollbackTransaction, subResourceId,
                 resourceExternalId, subResourceExternalId,message);
     }

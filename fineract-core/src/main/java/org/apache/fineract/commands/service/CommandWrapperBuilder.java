@@ -304,6 +304,14 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder createOfficeRegion(){
+        this.actionName = "CREATE";
+        this.entityName = "OFFICE_REGION";
+        this.entityId = null;
+        this.href = "/officeregion/template";
+        return this;
+    }
+
     public CommandWrapperBuilder updateOffice(final Long officeId) {
         this.actionName = "UPDATE";
         this.entityName = "OFFICE";

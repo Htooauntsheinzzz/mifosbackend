@@ -29,6 +29,7 @@ public class CommandProcessingResultBuilder {
     private Long commandId;
     private Long officeId;
     private Long officeCountryId;
+    private Long officeRegionId;
     private Long groupId;
     private Long clientId;
     private Long loanId;
@@ -49,7 +50,7 @@ public class CommandProcessingResultBuilder {
     private ExternalId subEntityExternalId = ExternalId.empty();
 
     public CommandProcessingResult build() {
-        return CommandProcessingResult.fromDetails(this.commandId, this.officeId, this.officeCountryId,this.groupId, this.clientId, this.loanId, this.savingsId,
+        return CommandProcessingResult.fromDetails(this.commandId, this.officeId, this.officeCountryId,this.officeRegionId,this.groupId, this.clientId, this.loanId, this.savingsId,
                 this.resourceIdentifier, this.entityId, this.gsimId, this.glimId, this.creditBureauReportData, this.transactionId,
                 this.changes, this.productId, this.rollbackTransaction, this.subEntityId, this.entityExternalId, this.subEntityExternalId,this.message);
     }
@@ -86,6 +87,11 @@ public class CommandProcessingResultBuilder {
 
     public CommandProcessingResultBuilder withOfficeCountryId(final Long withOfficeCountryId){
         this.officeCountryId = withOfficeCountryId;
+        return this;
+    }
+
+    public CommandProcessingResultBuilder withOfficeRegionId(final Long withOfficeRegionId){
+        this.officeRegionId = withOfficeRegionId;
         return this;
     }
 
